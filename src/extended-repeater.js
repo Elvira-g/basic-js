@@ -16,7 +16,64 @@ const { NotImplementedError } = require('../extensions/index.js');
  *
  */
 function repeater(/* str, options */) {
-  throw new NotImplementedError('Not implemented');
+  let newString = '';
+  let additions = '';
+  let str;
+  if ( typeof arguments[0] == 'object' ) {
+    if (arguments[0] == null ) {
+        str = 'null'; 
+    } else if (arguments[0][Symbol.toPrimitive]) {
+        str = arguments[0][Symbol.toPrimitive]();
+    } else if ( Array.isArray(arguments[0]) ) {
+        str = arguments[0].join('');
+    } else {
+        str = arguments[0].toString();
+    } 
+  } else if (arguments[0] == 'null' ) {
+      str = arguments[0].toString();
+  } else {
+      str = arguments[0].toString();
+  }
+  // const str = arguments[0].toString();
+  const obj = arguments[1];
+  const repeatTimes = obj.repeatTimes ? obj.repeatTimes : 1;
+  const separator = obj.separator ? obj.separator : '+' ;
+  let addition;
+  const additionRepeatTimes = obj.additionRepeatTimes ? obj.additionRepeatTimes : 1;
+  const additionSeparator = obj.additionSeparator ? obj.additionSeparator : '|';
+
+  if ( obj.addition === null ) {
+      addition = 'null';
+  } else if (typeof obj.addition == 'object' ) {
+      if (obj.addition[Symbol.toPrimitive]) {
+        addition = obj.addition[Symbol.toPrimitive]();
+      } else {
+        addition = obj.addition.toString();
+      }
+  } else if (typeof obj.addition == 'boolean') {
+      addition = obj.addition.toString();
+  } else if ( !obj.addition ) {
+      addition = ''
+  } else {
+      addition = obj.addition.toString();
+  }
+
+  for ( let i = 0; i < additionRepeatTimes; i++) {
+      additions = `${additions}${addition}`;
+      if ( i != additionRepeatTimes - 1 ) {
+          additions = `${additions}${additionSeparator}`;
+      }
+  }
+
+  for ( let i = 0; i < repeatTimes; i++ ) {
+      newString = `${newString}${str}${additions}`;
+      if ( i != repeatTimes-1 ) {
+          newString= `${newString}${separator}`
+      }
+  }
+
+return newString;
+
   // remove line with error and write your code here
 }
 
